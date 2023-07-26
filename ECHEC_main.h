@@ -105,7 +105,8 @@ void affiche_coup(int* actuel){
 
 
 
-void coup_possible(int nume, int posit, int * table_coup, int* echequier){
+int coup_possible(int nume, int posit, int * table_coup, int* echequier){
+			int prise_roi = 0 ;
 	        int x ;
             int y ;
 	        int l ;
@@ -128,13 +129,17 @@ void coup_possible(int nume, int posit, int * table_coup, int* echequier){
 						y = (1-2*(i%2))*(3-i)/2 ;
 						l  = x ;
 						m  = y ;
-			            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E()){
+			            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,0)){
 							table_coup[deplacement(x,y,posit)] = 1 ;
 							x = x + l;
 							y = y + m ;
 						}
-			            if ( Si_C_E(x,y,posit) && Si_P_B_P(x,y,posit,echequier)  &&  Si_N_P_P_E()){
-							table_coup[deplacement(x,y,posit)] = 2 ;
+			            if ( Si_C_E(x,y,posit) && Si_P_B_P(x,y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,0)){
+							if (Si_R_B_P(x,y,posit,echequier)){
+								table_coup[deplacement(x,y,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(x,y,posit)] = 2 ; }
 				}	}
             break;
         case 2:
@@ -144,13 +149,17 @@ void coup_possible(int nume, int posit, int * table_coup, int* echequier){
 						x = (1+(i/4)) * (1-2*((i/2)%2)) ;
 						y =  (2-(i/4)) * (-1+2*(i%2)) ;
 						
-				        if (  (Si_C_E(x,y,posit))   &&  Si_N_P_P_E()  ){
+				        if (  (Si_C_E(x,y,posit))   &&  Si_N_P_P_E(x, y,posit,echequier,0)  ){
 							if (   Si_A_P_P(x,y,posit,echequier) ){
 								table_coup[deplacement(x,y,posit)] = 1 ;
 								}
 							if ( Si_P_B_P(x,y,posit,echequier) ){
-								table_coup[deplacement(x,y,posit)] = 2 ;
-								}
+								if (Si_R_B_P(x,y,posit,echequier)){
+									table_coup[deplacement(x,y,posit)] = 3 ;
+									prise_roi = 1 ;
+								}else{
+									table_coup[deplacement(x,y,posit)] = 2 ; }
+									}
 				}	}
             break;
         case 3:
@@ -161,13 +170,17 @@ void coup_possible(int nume, int posit, int * table_coup, int* echequier){
 					l  = x ;
 					m  = y ;
 						
-		            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E()){
+		            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,0)){
 						table_coup[deplacement(x,y,posit)] = 1 ;
 						x = x + l;
 						y = y + m ;
 						}
-		            if ( Si_C_E(x,y,posit) && Si_P_B_P(x,y,posit,echequier)  &&  Si_N_P_P_E()){
-						table_coup[deplacement(x,y,posit)] = 2 ;}
+		            if ( Si_C_E(x,y,posit) && Si_P_B_P(x,y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,0)){
+													if (Si_R_B_P(x,y,posit,echequier)){
+								table_coup[deplacement(x,y,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(x,y,posit)] = 2 ; }}
 					}
             break;
         case 4:
@@ -178,26 +191,34 @@ void coup_possible(int nume, int posit, int * table_coup, int* echequier){
 					l  = x ;
 					m  = y ;
 						
-		            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E()){
+		            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,0)){
 						table_coup[deplacement(x,y,posit)] = 1 ;
 						x = x + l;
 						y = y + m ;
 						}
-		            if ( Si_C_E(x,y,posit) && Si_P_B_P(x,y,posit,echequier)  &&  Si_N_P_P_E()){
-						table_coup[deplacement(x,y,posit)] = 2 ;}
+		            if ( Si_C_E(x,y,posit) && Si_P_B_P(x,y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,0)){
+													if (Si_R_B_P(x,y,posit,echequier)){
+								table_coup[deplacement(x,y,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(x,y,posit)] = 2 ; }}
 					}
 				for ( int i = 0; i <= 3 ; i++ ){
 						x = (1-2*(i%2))*i/2 ;
 						y = (1-2*(i%2))*(3-i)/2 ;
 						l  = x ;
 						m  = y ;
-			            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E()){
+			            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,0)){
 							table_coup[deplacement(x,y,posit)] = 1 ;
 							x = x + l;
 							y = y + m ;
 						}
-			            if ( Si_C_E(x,y,posit) && Si_P_B_P(x,y,posit,echequier)  &&  Si_N_P_P_E()){
-							table_coup[deplacement(x,y,posit)] = 2 ;
+			            if ( Si_C_E(x,y,posit) && Si_P_B_P(x,y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,0)){
+														if (Si_R_B_P(x,y,posit,echequier)){
+								table_coup[deplacement(x,y,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(x,y,posit)] = 2 ; }
 				}	}
             
             break;
@@ -207,45 +228,67 @@ void coup_possible(int nume, int posit, int * table_coup, int* echequier){
 					x = 1 - ((13-i)/3)%3 ;
 					y =  1- ((i+2)%3) ;
 					
-			        if (  (Si_C_E(x,y,posit))   &&  Si_N_P_P_E()  ){
+			        if (  (Si_C_E(x,y,posit))   &&  Si_N_P_P_E(x, y,posit,echequier,0)  ){
 						if (   Si_A_P_P(x,y,posit,echequier) ){
 							table_coup[deplacement(x,y,posit)] = 1 ;
 							}
 						if ( Si_P_B_P(x,y,posit,echequier) ){
-							table_coup[deplacement(x,y,posit)] = 2 ;
+														if (Si_R_B_P(x,y,posit,echequier)){
+								table_coup[deplacement(x,y,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(x,y,posit)] = 2 ; }
 							}
 					}
 			}
             break;
         case 6:
 	            //pion noir ♟
-		        if (  (Si_C_E(0,-1,posit))  &&  Si_A_P_P(0,-1,posit,echequier)  &&  Si_N_P_P_E()  ){
+		        if (  (Si_C_E(0,-1,posit))  &&  Si_A_P_P(0,-1,posit,echequier)  &&  Si_N_P_P_E(0, -1,posit,echequier,0)  ){
 					table_coup[deplacement(0,-1,posit)] = 1 ;
 				}
-		        if (  Si_C_E(0,-2,posit) && Si_A_P_P(0,-2,posit,echequier) && Si_A_P_P(0,1,posit,echequier)  && Si_R_I_N(posit) &&  Si_N_P_P_E() ){
+		        if (  Si_C_E(0,-2,posit) && Si_A_P_P(0,-2,posit,echequier) && Si_A_P_P(0,-1,posit,echequier)  && Si_R_I_N(posit) &&  Si_N_P_P_E(0, -2,posit,echequier,0) ){
 					table_coup[deplacement(0,-2,posit)] = 1 ;
 				}
-		        if (  Si_C_E(1,-1,posit)  &&   (   Si_P_B_P(1,-1,posit,echequier)  ||  Si_P_Nr_Pass(1,0,posit,echequier) )  &&  Si_N_P_P_E()  ){
-					table_coup[deplacement(1,-1,posit)] = 2 ;
+		        if (  Si_C_E(1,-1,posit)  &&   (   Si_P_B_P(1,-1,posit,echequier)  ||  Si_P_Nr_Pass(1,0,posit,echequier) )  &&  Si_N_P_P_E(1, -1,posit,echequier,0)  ){
+
+							if (Si_R_B_P(1,-1,posit,echequier)){
+								table_coup[deplacement(1,-1,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(1,-1,posit)] = 2 ; }
 				} 
-		        if (  Si_C_E(-1,-1,posit)  &&   (   Si_P_B_P(-1,-1,posit,echequier)  ||  Si_P_Nr_Pass(-1,0,posit,echequier) )  &&  Si_N_P_P_E()   ){
-					table_coup[deplacement(-1,-1,posit)] = 2 ;
+		        if (  Si_C_E(-1,-1,posit)  &&   (   Si_P_B_P(-1,-1,posit,echequier)  ||  Si_P_Nr_Pass(-1,0,posit,echequier) )  &&  Si_N_P_P_E(-1, -1,posit,echequier,0)   ){
+
+							if (Si_R_B_P(-1,-1,posit,echequier)){
+								table_coup[deplacement(-1,-1,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(-1,-1,posit)] = 2 ; }
 				}
 				
             break;
         case 7:
 				//pion blanc ♙
-		        if (  (Si_C_E(0,1,posit))  &&  Si_A_P_P(0,1,posit,echequier)  &&  Si_N_P_P_E()  ){
+		        if (  (Si_C_E(0,1,posit))  &&  Si_A_P_P(0,1,posit,echequier)  &&  Si_N_P_P_E(0, 1,posit,echequier,1)  ){
 					table_coup[deplacement(0,1,posit)] = 1 ;
 				}
-		        if (  Si_C_E(0,2,posit) && Si_A_P_P(0,2,posit,echequier) && Si_A_P_P(0,1,posit,echequier)  && Si_R_I_B(posit) &&  Si_N_P_P_E() ){
+		        if (  Si_C_E(0,2,posit) && Si_A_P_P(0,2,posit,echequier) && Si_A_P_P(0,1,posit,echequier)  && Si_R_I_B(posit) &&  Si_N_P_P_E(0, 2,posit,echequier,1) ){
 					table_coup[deplacement(0,2,posit)] = 1 ;
 				}
-		        if (  Si_C_E(1,1,posit)  &&   (   Si_P_N_P(1,1,posit,echequier)  ||  Si_P_Nr_Pass(1,0,posit,echequier) )  &&  Si_N_P_P_E()  ){
-					table_coup[deplacement(1,1,posit)] = 2 ;
+		        if (  Si_C_E(1,1,posit)  &&   (   Si_P_N_P(1,1,posit,echequier)  ||  Si_P_Nr_Pass(1,0,posit,echequier) )  &&  Si_N_P_P_E(1, 1,posit,echequier,1)  ){
+							if (Si_R_N_P(1,1,posit,echequier)){
+								table_coup[deplacement(1,1,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(1,1,posit)] = 2 ; }
 				} 
-		        if (  Si_C_E(-1,1,posit)  &&   (   Si_P_N_P(-1,1,posit,echequier)  ||  Si_P_Nr_Pass(-1,0,posit,echequier) )  &&  Si_N_P_P_E()   ){
-					table_coup[deplacement(-1,1,posit)] = 2 ;
+		        if (  Si_C_E(-1,1,posit)  &&   (   Si_P_N_P(-1,1,posit,echequier)  ||  Si_P_Nr_Pass(-1,0,posit,echequier) )  &&  Si_N_P_P_E(-1, 1,posit,echequier,1)   ){
+							if (Si_R_N_P(-1,1,posit,echequier)){
+								table_coup[deplacement(-1,1,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(-1,1,posit)] = 2 ; }
 				}
 	        
             break;
@@ -256,13 +299,17 @@ void coup_possible(int nume, int posit, int * table_coup, int* echequier){
 						y = (1-2*(i%2))*(3-i)/2 ;
 						l  = x ;
 						m  = y ;
-			            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E()){
+			            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,1)){
 							table_coup[deplacement(x,y,posit)] = 1 ;
 							x = x + l;
 							y = y + m ;
 						}
-			            if ( Si_C_E(x,y,posit) && Si_P_N_P(x,y,posit,echequier)  &&  Si_N_P_P_E()){
-							table_coup[deplacement(x,y,posit)] = 2 ;
+			            if ( Si_C_E(x,y,posit) && Si_P_N_P(x,y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,1)){
+							if (Si_R_N_P(x,y,posit,echequier)){
+								table_coup[deplacement(x,y,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(x,y,posit)] = 2 ; }
 				}	}
 				
             break;
@@ -272,12 +319,16 @@ void coup_possible(int nume, int posit, int * table_coup, int* echequier){
 						x = (1+(i/4)) * (1-2*((i/2)%2)) ;
 						y =  (2-(i/4)) * (-1+2*(i%2)) ;
 						
-				        if (  (Si_C_E(x,y,posit))   &&  Si_N_P_P_E()  ){
+				        if (  (Si_C_E(x,y,posit))   &&  Si_N_P_P_E(x, y,posit,echequier,1)  ){
 							if (   Si_A_P_P(x,y,posit,echequier) ){
 								table_coup[deplacement(x,y,posit)] = 1 ;
 								}
 							if ( Si_P_N_P(x,y,posit,echequier) ){
-								table_coup[deplacement(x,y,posit)] = 2 ;
+								if (Si_R_N_P(x,y,posit,echequier)){
+									table_coup[deplacement(x,y,posit)] = 3 ;
+									prise_roi = 1 ;
+								}else{
+									table_coup[deplacement(x,y,posit)] = 2 ; }
 								}
 				}	}
             break;
@@ -289,13 +340,18 @@ void coup_possible(int nume, int posit, int * table_coup, int* echequier){
 					l  = x ;
 					m  = y ;
 						
-		            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E()){
+		            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,1)){
 						table_coup[deplacement(x,y,posit)] = 1 ;
 						x = x + l;
 						y = y + m ;
 						}
-		            if ( Si_C_E(x,y,posit) && Si_P_N_P(x,y,posit,echequier)  &&  Si_N_P_P_E()){
-						table_coup[deplacement(x,y,posit)] = 2 ;}
+		            if ( Si_C_E(x,y,posit) && Si_P_N_P(x,y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,1)){
+							if (Si_R_N_P(x,y,posit,echequier)){
+								table_coup[deplacement(x,y,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(x,y,posit)] = 2 ; }
+						}
 					}
             break;
         case 11:
@@ -306,26 +362,35 @@ void coup_possible(int nume, int posit, int * table_coup, int* echequier){
 					l  = x ;
 					m  = y ;
 						
-		            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E()){
+		            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,1)){
 						table_coup[deplacement(x,y,posit)] = 1 ;
 						x = x + l;
 						y = y + m ;
 						}
-		            if ( Si_C_E(x,y,posit) && Si_P_N_P(x,y,posit,echequier)  &&  Si_N_P_P_E()){
-						table_coup[deplacement(x,y,posit)] = 2 ;}
+		            if ( Si_C_E(x,y,posit) && Si_P_N_P(x,y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,1)){
+							if (Si_R_N_P(x,y,posit,echequier)){
+								table_coup[deplacement(x,y,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(x,y,posit)] = 2 ; }
+						}
 					}
 				for ( int i = 0; i <= 3 ; i++ ){
 						x = (1-2*(i%2))*i/2 ;
 						y = (1-2*(i%2))*(3-i)/2 ;
 						l  = x ;
 						m  = y ;
-			            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E()){
+			            while ( Si_C_E(x,y,posit) && Si_A_P_P(x, y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,1)){
 							table_coup[deplacement(x,y,posit)] = 1 ;
 							x = x + l;
 							y = y + m ;
 						}
-			            if ( Si_C_E(x,y,posit) && Si_P_N_P(x,y,posit,echequier)  &&  Si_N_P_P_E()){
-							table_coup[deplacement(x,y,posit)] = 2 ;
+			            if ( Si_C_E(x,y,posit) && Si_P_N_P(x,y,posit,echequier)  &&  Si_N_P_P_E(x, y,posit,echequier,1)){
+							if (Si_R_N_P(x,y,posit,echequier)){
+								table_coup[deplacement(x,y,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(x,y,posit)] = 2 ; }
 				}	}
             
             
@@ -337,12 +402,16 @@ void coup_possible(int nume, int posit, int * table_coup, int* echequier){
 					x = 1 - ((13-i)/3)%3 ;
 					y =  1- ((i+2)%3) ;
 					
-			        if (  (Si_C_E(x,y,posit))   &&  Si_N_P_P_E()  ){
+			        if (  (Si_C_E(x,y,posit))   &&  Si_N_P_P_E(x, y,posit,echequier,1)  ){
 						if (   Si_A_P_P(x,y,posit,echequier) ){
 							table_coup[deplacement(x,y,posit)] = 1 ;
 							}
 						if ( Si_P_N_P(x,y,posit,echequier) ){
-							table_coup[deplacement(x,y,posit)] = 2 ;
+							if (Si_R_N_P(x,y,posit,echequier)){
+								table_coup[deplacement(x,y,posit)] = 3 ;
+								prise_roi = 1 ;
+							}else{
+								table_coup[deplacement(x,y,posit)] = 2 ; }
 							}
 					}
 			}
@@ -351,7 +420,8 @@ void coup_possible(int nume, int posit, int * table_coup, int* echequier){
         default:
             printf( "Aucune piece\n" );
     }
-	
+    
+	return prise_roi ;
 }
 
 
@@ -405,4 +475,63 @@ void nom_piece(int nume){
 }
 
 
+bool Mets_En_Echec (int * actu, int couleur){
+	int table_des_coup[64] = {0};
+	if (couleur == 0){ // si  noir 
+		for (int i = 0 ; i <= 63 ; i++ ){
+			if (( actu[i]>=1 )&&( actu[i]<=6 )){
+				if (coup_possible(  actu[i]  , i  , table_des_coup , actu)){
+					return true;
+				}
+				for (int i = 0 ; i <= 63 ; i++){ table_des_coup[i] = 0 ; }
+			}
+		}
+	}
+	else{ // si  blanc 
+		for (int i = 0 ; i <= 63 ; i++ ){
+			if (( actu[i]>=7 )&&( actu[i]<=12 )){
+				if (coup_possible(  actu[i]  , i  , table_des_coup , actu)){
+					return true;
+				}
+				for (int i = 0 ; i <= 63 ; i++){ table_des_coup[i] = 0 ; }
+			}
+		}
+	}
+	return false ;
+	}
 
+
+bool Est_En_EchecMat (int * actu, int couleur){
+	int table_des_coup[64] = {0};
+	if (couleur == 0){ // si  noir 
+		for (int i = 0 ; i <= 63 ; i++ ){
+			if (( actu[i]>=1 )&&( actu[i]<=6 )){
+				if (coup_possible(  actu[i]  , i  , table_des_coup , actu)){
+					return false;
+				}
+				for (int j = 0 ; j <= 63 ; j++ ){
+					if (table_des_coup[j]==1||table_des_coup[j]==2){
+						return false;
+					}
+				}
+				for (int i = 0 ; i <= 63 ; i++){ table_des_coup[i] = 0 ; }
+			}
+		}
+	}
+	else{ // si  blanc 
+		for (int i = 0 ; i <= 63 ; i++ ){
+			if (( actu[i]>=7 )&&( actu[i]<=12 )){
+				if (coup_possible(  actu[i]  , i  , table_des_coup , actu)){
+					return false;
+				}
+				for (int j = 0 ; j <= 63 ; j++ ){
+					if (table_des_coup[j]==1||table_des_coup[j]==2){
+						return false;
+					}
+				}
+				for (int i = 0 ; i <= 63 ; i++){ table_des_coup[i] = 0 ; }
+			}
+		}
+	}
+	return true ;
+	}

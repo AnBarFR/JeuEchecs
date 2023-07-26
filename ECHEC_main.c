@@ -22,23 +22,23 @@
 
 int main(void){
 					   
-	int echequier[] = { 1, 2, 3, 4, 5, 3, 2, 1,
-						6, 6, 6, 6, 6, 6, 6, 6,
-						0, 0, 0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0, 0, 0,
-					    7, 7, 7, 7, 7, 7, 7, 7,
-					    8, 9,10,11,12,10, 9, 8};
+	//~ int echequier[] = { 1, 2, 3, 4, 5, 3, 2, 1,
+						//~ 6, 6, 6, 6, 6, 6, 6, 6,
+						//~ 0, 0, 0, 0, 0, 0, 0, 0,
+						//~ 3, 0, 0, 0, 0, 0, 0, 0,
+						//~ 0, 0, 0, 0, 0, 0, 0, 0,
+						//~ 0, 0, 0, 0, 0, 0, 0, 0,
+					    //~ 7, 7, 7, 7, 7, 7, 7, 7,
+					    //~ 8, 9,10,11,12,10, 9, 8};
 					   
-	//~ int echequier[] = { 1, 0, 3, 0, 5, 0, 0, 1,
-						//~ 6, 6, 0, 0, 2, 6, 6, 6,
-						//~ 0, 0, 2, 0, 6, 0, 0, 0,
-						//~ 0, 0, 0, 6, 7, 0, 0, 0,
-						//~ 4, 0, 0, 7, 0, 0, 0, 0,
-						//~ 7, 0, 0, 0, 0, 9, 0, 0,
-					    //~ 0, 0, 0,10, 0, 7, 7, 7,
-					    //~ 0, 8, 0,11,12,10, 0, 8};
+	int echequier[] = { 1, 0, 3, 0, 5, 0, 0, 1,
+						6, 6, 0, 0, 2, 6, 6, 6,
+						0, 0, 2, 0, 6, 0, 0, 0,
+						0, 0, 0, 4, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0,
+						7, 0, 0, 0, 0, 0, 0, 0,
+					    0, 0, 0, 7, 0, 7, 7, 7,
+					    0, 8, 11, 7,12, 7, 0, 8};
 					    
 					    //13 = pion passant noir
 					    //14 = pion passant blanc
@@ -48,7 +48,9 @@ int main(void){
 	char case_desti[2];
 	int nbr_tour = 1 ;
 	//~ int couleur_tour ; // 0 = noir   1 = blanc
-
+	//~ bool echec_noir = 0 ;
+	//~ bool echec_blanc = 0 ;
+	
 while (true){
 	printf("\n------------------------------- \n\n");
 	if (nbr_tour%2==1) {
@@ -63,7 +65,24 @@ while (true){
 	}
 	affiche_echeq_piece(echequier);
 	
-	  
+	
+	if (Est_En_EchecMat (echequier, 0)){
+		printf("\n\nLes blancs ont gagne !!! \n\n ");
+		return 1 ;
+	}
+	if (Est_En_EchecMat (echequier, 1)){
+		printf("\n\nLes noirs ont gagne !!! \n\n ");
+		return 1 ;
+	}
+	
+	if (Mets_En_Echec (echequier, 0)){
+		printf("\nLes blancs sont en echec \n\n ");
+	}
+	if (Mets_En_Echec (echequier, 1)){
+		printf("\nLes noirs sont en echec \n\n ");
+	}
+	
+	
 	  printf("Entrez la case : ");
 	  
 	if ( scanf("%s", case_selec) != 1 ){
@@ -94,6 +113,7 @@ while (true){
 	
 	nom_piece(echequier[numer_case(case_selec)]);
 	
+	//~ printf("%d\n",coup_possible(  echequier[numer_case(case_selec)]  , numer_case(case_selec)  , table_coup , echequier));
 	coup_possible(  echequier[numer_case(case_selec)]  , numer_case(case_selec)  , table_coup , echequier);
 	
 	//~ affiche_coup(table_coup);
@@ -104,7 +124,13 @@ while (true){
 		printf("Erreur dans la saisi ");
 	}
 	
-	if ((table_coup[numer_case(case_desti)] == 1)||(table_coup[numer_case(case_desti)] == 2)){
+	if (numer_case(case_desti)==-1){
+		printf("Entrez une case existante ");
+		continue;
+	}
+	
+	if ((table_coup[numer_case(case_desti)] == 1)||(table_coup[numer_case(case_desti)] == 2)||(table_coup[numer_case(case_desti)] == 3)){
+
 		echequier[numer_case(case_desti)] = echequier[numer_case(case_selec)] ;
 		echequier[numer_case(case_selec)] = 0 ;
 		printf("Deplacement effectuer\n\n");
